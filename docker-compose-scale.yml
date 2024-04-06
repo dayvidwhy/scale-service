@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  scale-app:
+    image: dayvidwhy/scale-service:tag
+    ports:
+      - target: 3000
+        published: 80
+        protocol: tcp
+        mode: ingress
+    working_dir: /usr/src/app
+    environment:
+      - NODE_ENV=production
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    depends_on:
+      - db
+      - redis
+  
+  db:
+    image: postgres:latest
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
+
+  redis:
+    image: redis:latest
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: host
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
