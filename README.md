@@ -1,6 +1,11 @@
 # Scale Service
 Simple back-end service to demonstrate handling queues of background jobs.
 
+![GitHub last commit](https://img.shields.io/github/last-commit/dayvidwhy/scale-service)
+![GitHub issues](https://img.shields.io/github/issues/dayvidwhy/scale-service)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/dayvidwhy/scale-service)
+![GitHub](https://img.shields.io/github/license/dayvidwhy/scale-service)
+
 Instead of having to wait, an id is returned that can be used to query that status of the job.
 
 ## Get Started
